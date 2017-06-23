@@ -6,4 +6,4 @@ docker start \
    sentry-worker-01 \
    sentry-cron
 
-sudo docker ps -a
+docker ps -a

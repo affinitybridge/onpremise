@@ -42,6 +42,10 @@ SENTRY_SERVICES="\
 "
 
 SENTRY_ENV="\
+   --env SENTRY_SERVER_EMAIL=sentry@sentry.affinitybridge.com \
+   --env SENTRY_EMAIL_HOST=localhost \
+   --env SENTRY_ENABLE_EMAIL_REPLIES=1 \
+   --env SENTRY_SMTP_HOSTNAME=sentry.affinitybridge.com \
    --env SENTRY_AUTH_REGISTER=0 \
    --env SENTRY_SINGLE_ORGANIZATION=1 \
    --env SENTRY_USE_SSL=1 \
