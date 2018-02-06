@@ -1,0 +1,16 @@
+[Unit]
+Description=Sentry cron
+After=sentry_postgres.service sentry_redis.service sentry_smtp.service
+Requires=sentry_postgres.service sentry_redis.service sentry_smtp.service
+StopWhenUnneeded=yes
+
+[Service]
+User=affinity
+Restart=always
+ExecStart=/usr/bin/docker start -a sentry-cron
+ExecStartPost=/usr/bin/docker ps -a
+ExecStop=/usr/bin/docker stop sentry-cron
+ExecStopPost=/usr/bin/docker ps -a
+
+[Install]
+WantedBy=sentry.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=Sentry web
+After=sentry_postgres.service sentry_redis.service sentry_smtp.service
+Requires=sentry_postgres.service sentry_redis.service sentry_smtp.service
+StopWhenUnneeded=yes
+
+[Service]
+User=affinity
+Restart=always
+ExecStart=/usr/bin/docker start -a sentry-web-01
+ExecStartPost=/usr/bin/docker ps -a
+ExecStop=/usr/bin/docker stop sentry-web-01
+ExecStopPost=/usr/bin/docker ps -a
+StopWhenUnneeded=yes
+
+[Install]
+WantedBy=sentry.target

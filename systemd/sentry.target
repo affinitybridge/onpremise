@@ -1,0 +1,3 @@
+[Unit]
+Description=Sentry
+Wants=sentry_postgres.service sentry_redis.service sentry_smtp.service sentry_cron.service sentry_worker.service sentry_web.service

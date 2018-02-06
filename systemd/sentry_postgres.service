@@ -1,0 +1,16 @@
+[Unit]
+Description=Sentry postgres
+After=docker.service
+Requires=docker.service
+StopWhenUnneeded=yes
+
+[Service]
+User=affinity
+Restart=always
+ExecStart=/usr/bin/docker start -a sentry-postgres
+ExecStartPost=/usr/bin/docker ps -a
+ExecStop=/usr/bin/docker stop sentry-postgres
+ExecStopPost=/usr/bin/docker ps -a
+
+[Install]
+WantedBy=sentry.target

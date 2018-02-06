@@ -94,3 +94,8 @@ docker run \
 docker network ls
 # List running Docker processes.
 docker ps -a
+
+# Stop it all now that it's running in favour of the systemd scripts
+echo "Stopping Sentry, you can now start by running:\nsystemctl start sentry.target"
+docker stop sentry-web-01 sentry-worker-01 sentry-cron sentry-smtp sentry-redis sentry-postgres
+docker ps -a
