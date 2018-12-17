@@ -6,59 +6,61 @@
 # See docs.getsentry.com/on-premise/server/ for full
 # instructions
 
-version: '2'
-services:
-  base:
-    build: .
-    environment:
-      # Run `docker-compose run web config generate-secret-key`
-      # to get the SENTRY_SECRET_KEY value.
-      # SENTRY_SECRET_KEY: ''
-      SENTRY_MEMCACHED_HOST: memcached
-      SENTRY_REDIS_HOST: redis
-      SENTRY_POSTGRES_HOST: postgres
-      SENTRY_EMAIL_HOST: smtp
-    volumes:
-      - ./data/sentry:/var/lib/sentry/files
+version: '3.4'
 
+x-defaults: &defaults
+  restart: unless-stopped
+  build: .
+  depends_on:
+    - redis
+    - postgres
+    - memcached
+    - smtp
+  env_file: .env
+  environment:
+    SENTRY_MEMCACHED_HOST: memcached
+    SENTRY_REDIS_HOST: redis
+    SENTRY_POSTGRES_HOST: postgres
+    SENTRY_EMAIL_HOST: smtp
+  volumes:
+    - sentry-data:/var/lib/sentry/files
+
+
+services:
   smtp:
+    restart: unless-stopped
     image: tianon/exim4
 
   memcached:
-    image: memcached:1.4
+    restart: unless-stopped
+    image: memcached:1.5-alpine
 
   redis:
+    restart: unless-stopped
     image: redis:3.2-alpine
 
   postgres:
+    restart: unless-stopped
     image: postgres:9.5
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - sentry-postgres:/var/lib/postgresql/data
 
   web:
-    extends: base
-    links:
-      - redis
-      - postgres
-      - memcached
-      - smtp
+    <<: *defaults
     ports:
       - '9000:9000'
 
   cron:
-    extends: base
+    <<: *defaults
     command: run cron
-    links:
-      - redis
-      - postgres
-      - memcached
-      - smtp
 
   worker:
-    extends: base
+    <<: *defaults
     command: run worker
-    links:
-      - redis
-      - postgres
-      - memcached
-      - smtp
+
+
+volumes:
+    sentry-data:
+      external: true
+    sentry-postgres:
+      external: true
