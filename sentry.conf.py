@@ -86,8 +86,6 @@ SENTRY_USE_BIG_INTS = True
 # and thus various UI optimizations should be enabled.
 SENTRY_SINGLE_ORGANIZATION = env('SENTRY_SINGLE_ORGANIZATION', True)
 
-SENTRY_FEATURES['auth:register'] = Bool(env('SENTRY_AUTH_REGISTER', False))
-
 #########
 # Redis #
 #########

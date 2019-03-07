@@ -56,6 +56,7 @@ docker rm sentry-web-01 sentry-worker-01 sentry-cron
 docker run \
    --detach \
    --network sentry-network \
+   --mount source=sentry-data,target=/var/lib/sentry/files \
    ${SENTRY_ENV} \
    --publish 9000:9000 \
    --name sentry-web-01 \
@@ -65,6 +66,7 @@ docker run \
 docker run \
    --detach \
    --network sentry-network \
+   --mount source=sentry-data,target=/var/lib/sentry/files \
    ${SENTRY_ENV} \
    --name sentry-worker-01 \
    ${REPOSITORY} \
@@ -73,6 +75,7 @@ docker run \
 docker run \
    --detach \
    --network sentry-network \
+   --mount source=sentry-data,target=/var/lib/sentry/files \
    ${SENTRY_ENV} \
    --name sentry-cron \
    ${REPOSITORY} \
@@ -80,15 +83,13 @@ docker run \
 
 docker start sentry-web-01 sentry-worker-01 sentry-cron
 
+# List Volumes:
+docker volume ls
 # List Docker networks.
 docker network ls
 # List running Docker processes.
 docker ps -a
 
-# Stop it all now that it's running in favour of the systemd scripts
-echo "Stopping Sentry, you can now start by running:\nsystemctl start sentry.target"
-docker stop sentry-web-01 sentry-worker-01 sentry-cron sentry-smtp sentry-redis sentry-postgres
-docker ps -a
 # Stop it all now that it's running in favour of the systemd scripts
 echo "Stopping Sentry, you can now start by running:\nsystemctl start sentry.target"
 docker stop sentry-web-01 sentry-worker-01 sentry-cron sentry-smtp sentry-redis sentry-postgres

@@ -15,10 +15,14 @@ make build
 # Create Docker bridge network to use.
 docker network create sentry-network
 
+docker volume create sentry-postgres
+docker volume create sentry-data
+
 # Create dependant services for Sentry.
 docker run \
    --detach \
    --network sentry-network \
+   --mount source=sentry-postgres,target=/var/lib/postgresql/data \
    --env POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
    --env POSTGRES_USER=${POSTGRES_USER} \
    --name sentry-postgres \
@@ -68,6 +72,7 @@ docker run \
 docker run \
    --detach \
    --network sentry-network \
+   --mount source=sentry-data,target=/var/lib/sentry/files \
    ${SENTRY_ENV} \
    --publish 9000:9000 \
    --name sentry-web-01 \
@@ -77,6 +82,7 @@ docker run \
 docker run \
    --detach \
    --network sentry-network \
+   --mount source=sentry-data,target=/var/lib/sentry/files \
    ${SENTRY_ENV} \
    --name sentry-worker-01 \
    ${REPOSITORY} \
@@ -85,11 +91,14 @@ docker run \
 docker run \
    --detach \
    --network sentry-network \
+   --mount source=sentry-data,target=/var/lib/sentry/files \
    ${SENTRY_ENV} \
    --name sentry-cron \
    ${REPOSITORY} \
    run cron
 
+# List Docker Volumes.
+docker volume ls
 # List Docker networks.
 docker network ls
 # List running Docker processes.
