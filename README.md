@@ -5,7 +5,10 @@ Official bootstrap for running your own [Sentry](https://sentry.io/) with [Docke
 ## Requirements
 
  * Docker 1.10.0+
- * Compose 1.6.0+ _(optional)_
+ * ~~Compose 1.6.0+ _(optional)_~~ **We are not currently using Docker Compose as it was not available as an option at the time the Affinity Bridge instance was deployed. We use a [custom set of `systemd` unit files](./systemd) instead.**
+
+
+## Original Sentry documentation
 
 ## Up and Running
 
